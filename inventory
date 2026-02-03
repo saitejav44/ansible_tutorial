@@ -1,6 +1,10 @@
+[dbservers]
 oracleansiblemaster.test.com
 oraclelinuxserver.test.com
+
+[webservers]
 oraclelinuxclient.test.com
+
 #10.0.2.6
 #10.0.2.15
 #10.0.2.8

@@ -1,0 +1,14 @@
+---
+
+- hosts: webservers
+  become: true
+  tasks:
+
+  - name: Remove httpd and nginx services
+    ansible.builtin.dnf:
+      name:
+        - httpd
+        - nginx
+      state: absent
+      autoremove: yes
+

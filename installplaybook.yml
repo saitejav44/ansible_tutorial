@@ -1,0 +1,12 @@
+---
+
+- hosts: webservers
+  become: true
+  tasks:
+
+  - name: install apache and nginx package
+    ansible.builtin.dnf:
+      name: 
+        - httpd
+        - nginx
+      state: latest
