@@ -11,4 +11,5 @@
         - nginx
       state: absent
       autoremove: yes
+    when: ansible_distribution == "OracleLinux"
 

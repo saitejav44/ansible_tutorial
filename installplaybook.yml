@@ -4,9 +4,23 @@
   become: true
   tasks:
 
-  - name: install apache and nginx package
+  - name: install apache package
     ansible.builtin.dnf:
       name: 
         - httpd
-        - nginx
       state: latest
+    when: ansible_distribution in ["Ubuntu", "Debian"]
+
+  - name: install nginx package
+    ansible.builtin.dnf:
+      name: nginx
+      state: latest
+      update_cache: yes
+    when: ansible_distribution in ["RedHat", "CentOS", "OracleLinux"]
+
+  - name: Enable nginx package
+    ansible.builtin.systemd_service:
+      name: nginx
+      state: started
+      enabled: yes
+    when: ansible_distribution in ["RedHat" , "CentOS", "OracleLinux"]
