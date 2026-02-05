@@ -2,14 +2,15 @@
 
 - hosts: webservers
   become: true
+  vars:
+    apache_package: "{{ 'httpd' if ansible_os_family == 'RedHat' else 'apache2' }}"
+    php_package: "{{ 'php' if ansible_os_family == 'RedHat' else 'libapache-mod-php' }}"
   tasks:
 
-  - name: Remove httpd and nginx services
+  - name: Remove httpd and php
     ansible.builtin.dnf:
       name:
-        - httpd
-        - nginx
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: absent
       autoremove: yes
-    when: ansible_distribution == "OracleLinux"
-

@@ -2,25 +2,33 @@
 
 - hosts: webservers
   become: true
+  vars:
+    apache_package: "{{ 'httpd' if ansible_os_family == 'RedHat' else 'apache2' }}"
+    php_package: "{{ 'php' if ansible_os_family == 'RedHat' else 'libapache2-mod-php'}}"
+#    php_service: "{{ 'php-fpm' if ansible_os_family == 'RedHat' else '' }}"
+  
   tasks:
 
-  - name: install apache package
-    ansible.builtin.dnf:
-      name: 
-        - httpd
-      state: latest
-    when: ansible_distribution in ["Ubuntu", "Debian"]
-
-  - name: install nginx package
-    ansible.builtin.dnf:
-      name: nginx
+  - name: Install Apache and Php
+    ansible.builtin.package:
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: latest
       update_cache: yes
-    when: ansible_distribution in ["RedHat", "CentOS", "OracleLinux"]
 
-  - name: Enable nginx package
-    ansible.builtin.systemd_service:
-      name: nginx
+  - name: Enable Apache services
+    ansible.builtin.service:
+      name: "{{ apache_package  }}"
       state: started
       enabled: yes
-    when: ansible_distribution in ["RedHat" , "CentOS", "OracleLinux"]
+
+
+# - name: Enable Apache and php
+#    ansible.builtin.service:
+#      name: "{{ item }}"
+#      state: started
+#      enabled: yes
+#    loop:
+#      - "{{ apache_package }}"
+#      - "{{ php_service }}"
