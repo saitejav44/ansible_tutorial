@@ -14,3 +14,23 @@
         - "{{ php_package }}"
       state: absent
       autoremove: yes
+
+  - name: Remove terraform
+    tags: terraform
+    ansible.builtin.dnf:
+      name: "terraform"
+      state: absent
+      autoremove: yes
+
+
+  - name: Remove index.html file
+    tags: html
+    ansible.builtin.file:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - /var/www/html/index.html
+      - /usr/local/bin/LICENSE.txt
+      - /usr/local/bin/terraform
+
+
