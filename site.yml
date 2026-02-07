@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+    #  - name: Install updates (CentOS)
+    #dnf:
+      #      update_only: yes
+      #update_cache: yes
+      #when: ansible_os_family == "RedHat"
+
+    #- name: Install updated (Ubuntu)
+    #apt:
+      #      upgrade: dist
+      #update_cache: yes
+      #when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  roles:
+    - base
+
+- hosts: workstation
+  become: true
+  roles:
+    - workstation
+
+- hosts: webservers
+  become: true
+  roles:
+    - webservers
+
+- hosts: dbservers
+  become: true
+  roles:
+    - dbservers
+
+- hosts: fileservers
+  become: true
+  roles:
+    - fileservers

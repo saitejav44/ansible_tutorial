@@ -1,0 +1,50 @@
+- name: Install httpd package (RedHat)
+  tags: apache,httpd,php,redhat
+  package:
+    name: 
+      - httpd
+      - php
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Start apache services (RedHat)
+  tags: apache,httpd,redhat
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Install apache2 package (Ubuntu)
+  tags: apache,php,ubuntu
+  package:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: change e-mail address for admin
+  tags: apache,httpd,redhat
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin somebody@somewhere.net
+  when: ansible_os_family == "RedHat"
+  register: httpd
+
+- name: Restart httpd (RedHat)
+  tags: apache,httpd,redhat
+  service:
+    name: httpd
+    state: restarted
+  when: httpd.changed
+
+- name: Copy html file from site
+  tags: apache,apache2,httpd,ubuntu,redhat
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
